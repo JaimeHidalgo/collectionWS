@@ -14,24 +14,28 @@ url = 'https://opensea.io/letsGoBrandon-NFT'
 response = driver.get(url)
 nftDict = []
 def divScrappe(div,last_height):
-    try: 
+    textVariable = '/html/body/div[1]/div/main/div/div/div/div[5]/div/div[3]/div[3]/div[3]/div[2]/div/div[%s]'%div
+    htmltest = driver.find_element_by_xpath(textVariable)
+    if htmltest.text == '':
+        time.sleep(15)
         textVariable = '/html/body/div[1]/div/main/div/div/div/div[5]/div/div[3]/div[3]/div[3]/div[2]/div/div[%s]'%div
         htmltest = driver.find_element_by_xpath(textVariable)
-        if htmltest.text == '':
-            print("if is being trigger")
-            time.sleep(15)
-            divScrappe(div,last_height)
+        print(f"the div is {div}")
         print(htmltest.text)
         driver.execute_script("arguments[0].scrollIntoView();",htmltest)
         nftDict.append(htmltest)
-    except NoSuchElementException:
-        driver.execute_script("window.scrollTo(0,{last_height});".format(last_height=last_height))
+
+    print(f"the div is {div}")
+    print(htmltest.text)
+    driver.execute_script("arguments[0].scrollIntoView();",htmltest)
+    nftDict.append(htmltest)
+   
                                     
     
 
 maxDivs = 0
 last_height = 0
-for nft in range(1,1750):
+for nft in range(1,7600):
     total_height = driver.execute_script("return document.body.scrollHeight;")
     
     
@@ -45,6 +49,7 @@ for nft in range(1,1750):
     
     divScrappe(nft,last_height)
     maxDivs += 1
+
 with open ('nftCollections.txt','w') as f:
     for nft in nftDict:
         f.write("%s\n" % nft)
